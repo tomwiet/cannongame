@@ -21,10 +21,11 @@ var myGameArea = {
         document.body.insertBefore(this.canvas, document.body.childNodes[0]);
         this.interval = setInterval(updateGameArea,10);
         window.addEventListener('keydown', function (e) {
-            myGameArea.key = e.keyCode;
+            myGameArea.keys = (myGameArea.keys || []);
+            myGameArea.keys[e.keyCode] = true;
         })
         window.addEventListener('keyup', function (e) {
-            myGameArea.key = false;
+            myGameArea.keys[e.keyCode] = false; 
         })
   	
   	},
@@ -83,14 +84,14 @@ function updateGameArea() {
 	myGameArea.clear();
 	myCannon.speedX=0;
 	
-	if (myGameArea.key && myGameArea.key == 37) {myCannon.speedX = -1; }
+	if (myGameArea.keys && myGameArea.keys[37]) {myCannon.speedX = -1; }
 	
-	if (myGameArea.key && myGameArea.key == 39) {myCannon.speedX = 1; }
+	if (myGameArea.keys && myGameArea.keys[39]) {myCannon.speedX = 1; }
 	
 	myCannon.newPos();	
 	myCannon.update();
 	
-	if (myGameArea.key && myGameArea.key == 32) {
+	if (myGameArea.keys && myGameArea.keys[32]) {
 		myBullet = new component(10,10,"red",myCannon.x+10,myCannon.y-10); 
 		
 		}
