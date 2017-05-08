@@ -1,6 +1,6 @@
 var mySquare;
 var myCannon;
-var myBullet;
+var myBullet = [];
 
 
 function startGame() {
@@ -19,6 +19,7 @@ var myGameArea = {
         this.canvas.height = 270;
         this.context = this.canvas.getContext("2d");
         document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+        this.frameNo = 0;
         this.interval = setInterval(updateGameArea,10);
         window.addEventListener('keydown', function (e) {
             myGameArea.keys = (myGameArea.keys || []);
@@ -78,11 +79,13 @@ function component(width, height, color, x, y,type) {
         if (this.x==myGameArea.canvas.width-30) {this.x=myGameArea.canvas.width-30-1}
         this.y += this.speedY; 
     };
+    
 }  
 function updateGameArea() {
 
 	myGameArea.clear();
 	myCannon.speedX=0;
+	
 	
 	if (myGameArea.keys && myGameArea.keys[37]) {myCannon.speedX = -1; }
 	
@@ -90,20 +93,24 @@ function updateGameArea() {
 	
 	myCannon.newPos();	
 	myCannon.update();
+
 	
-	if (myGameArea.keys && myGameArea.keys[32]) {
-		myBullet = new component(10,10,"red",myCannon.x+10,myCannon.y-10); 
+   
+	var nextBullet=true;
 		
+	for(i=0;i<myBullet.length;i++){
+		
+			if (myBullet[i].y>150) nextBullet=false;
+			
+			myBullet[i].y +=-1;
+			myBullet[i].update();
 		}
-   
-   
-	
-	if (myBullet) {
-		myBullet.speedY=-1;
-		myBullet.newPos();
-		myBullet.update();		
-	}
-	
+		
+	if (myGameArea.keys && myGameArea.keys[32] && nextBullet) {
+		
+				myBullet.push (new component(10,10,"red",myCannon.x+10,myCannon.y-10));
+		}
 }
+
 
 document.body.onload = startGame();
