@@ -1,6 +1,7 @@
 var mySquare;
 var myCannon;
 var myBullet = [];
+var myObstacles = [];
 
 
 function startGame() {
@@ -85,7 +86,9 @@ function updateGameArea() {
 
 	myGameArea.clear();
 	myCannon.speedX=0;
+	myGameArea.frameNo += 1;
 	
+	//ruch działem (prawo, lewo)
 	
 	if (myGameArea.keys && myGameArea.keys[37]) {myCannon.speedX = -1; }
 	
@@ -93,8 +96,23 @@ function updateGameArea() {
 	
 	myCannon.newPos();	
 	myCannon.update();
+	// cele do odstrzelenie ;)
+	var x;   
 
+   if (myGameArea.frameNo == 1 || everyinterval(150)) {
+   
+		x = Math.floor(Math.random()*myGameArea.canvas.width - 20);
+		myObstacles.push(new component(20,20,"blue",x,0));   
+   }
 	
+	for (i=0;i<myObstacles.length;i++) {
+		
+		myObstacles[i].y +=1;
+		myObstacles[i].update();
+	}
+	   
+
+   //strzał (jeśli choć jeden poprzedni pocisk jest na odpowiedniej wysokości)	
    
 	var nextBullet=true;
 		
@@ -112,5 +130,9 @@ function updateGameArea() {
 		}
 }
 
+function everyinterval(n) {
+    if ((myGameArea.frameNo / n) % 1 == 0) {return true;}
+    return false;
+}
 
 document.body.onload = startGame();
