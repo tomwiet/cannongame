@@ -80,43 +80,87 @@ function component(width, height, color, x, y,type) {
         if (this.x==myGameArea.canvas.width-30) {this.x=myGameArea.canvas.width-30-1}
         this.y += this.speedY; 
     };
+    this.crashWith = function(otherobj) {
+        var myleft = this.x;
+        var myright = this.x + (this.width);
+        var mytop = this.y;
+        var mybottom = this.y + (this.height);
+        var otherleft = otherobj.x;
+        var otherright = otherobj.x + (otherobj.width);
+        var othertop = otherobj.y;
+        var otherbottom = otherobj.y + (otherobj.height);
+        var crash = true;
+        if ((mybottom < othertop) ||
+               (mytop > otherbottom) ||
+               (myright < otherleft) ||
+               (myleft > otherright)) {
+           crash = false;
+        }
+        return crash;
+    };
     
 }  
 function updateGameArea() {
+	//koniec gry kiedy cel trafi w działo
+	   
+	  for (i = 0; i < myObstacles.length; i++) {
+        
+        if (myCannon.crashWith(myObstacles[i])) {
+            
+            myGameArea.stop();
+            return;
+        } 
+    	}
+    //gdy strzał celny usuń trafiony cel
+     
+     for (i = 0; i<myObstacles.length; i++) {
+     
+     		for (j=0;j<myBullet.length;j++) {
+     			
+     			if (myBullet[j].crashWith(myObstacles[i])) {
+     				
+     				myObstacles.splice(i,1);
+					myBullet.splice(j,1);     				
+     			}
+     		}	
+     	
+     	
+     }
+    
 
-	myGameArea.clear();
-	myCannon.speedX=0;
-	myGameArea.frameNo += 1;
+		myGameArea.clear();
+		myCannon.speedX=0;
+		myGameArea.frameNo += 1;
 	
-	//ruch działem (prawo, lewo)
+		//ruch działem (prawo, lewo)
 	
-	if (myGameArea.keys && myGameArea.keys[37]) {myCannon.speedX = -1; }
+		if (myGameArea.keys && myGameArea.keys[37]) {myCannon.speedX = -1; }
 	
-	if (myGameArea.keys && myGameArea.keys[39]) {myCannon.speedX = 1; }
+		if (myGameArea.keys && myGameArea.keys[39]) {myCannon.speedX = 1; }
 	
-	myCannon.newPos();	
-	myCannon.update();
-	// cele do odstrzelenie ;)
-	var x;   
+		myCannon.newPos();	
+		myCannon.update();
+		// cele do odstrzelenie ;)
+		var x;   
 
-   if (myGameArea.frameNo == 1 || everyinterval(150)) {
+   	if (myGameArea.frameNo == 1 || everyinterval(150)) {
    
-		x = Math.floor(Math.random()*myGameArea.canvas.width - 20);
-		myObstacles.push(new component(20,20,"blue",x,0));   
-   }
+			x = Math.floor(Math.random()*myGameArea.canvas.width - 20);
+			myObstacles.push(new component(20,20,"blue",x,0));   
+  		 }
 	
-	for (i=0;i<myObstacles.length;i++) {
+		for (i=0;i<myObstacles.length;i++) {
 		
-		myObstacles[i].y +=1;
-		myObstacles[i].update();
-	}
+			myObstacles[i].y +=1;
+			myObstacles[i].update();
+		}
 	   
 
-   //strzał (jeśli choć jeden poprzedni pocisk jest na odpowiedniej wysokości)	
+   	//strzał (jeśli choć jeden poprzedni pocisk jest na odpowiedniej wysokości)	
    
-	var nextBullet=true;
+		var nextBullet=true;
 		
-	for(i=0;i<myBullet.length;i++){
+		for(i=0;i<myBullet.length;i++){
 		
 			if (myBullet[i].y>150) nextBullet=false;
 			
@@ -124,7 +168,7 @@ function updateGameArea() {
 			myBullet[i].update();
 		}
 		
-	if (myGameArea.keys && myGameArea.keys[32] && nextBullet) {
+		if (myGameArea.keys && myGameArea.keys[32] && nextBullet) {
 		
 				myBullet.push (new component(10,10,"red",myCannon.x+10,myCannon.y-10));
 		}
