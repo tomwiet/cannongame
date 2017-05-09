@@ -2,11 +2,15 @@ var mySquare;
 var myCannon;
 var myBullet = [];
 var myObstacles = [];
+var myScore;
+var myPts =0;
 
 
 function startGame() {
     
     myGameArea.start();
+    myScore = new component("20px", "Consolas", "black", 10, 30, "text");
+    myScore.text = "Score: 0"; 
     myCannon = new component(30,30,"cannon1.png",(myGameArea.canvas.width/2)-15,myGameArea.canvas.height-30,"image");
 
 }
@@ -41,6 +45,10 @@ var myGameArea = {
   	stop : function() {
 
         clearInterval(this.interval);
+        ctx.fillStyle = "red";
+        ctx.font = "30px Arial";
+        ctx.fillText("Game Over", 150,100);
+        
 
     }
 }
@@ -51,6 +59,9 @@ function component(width, height, color, x, y,type) {
     	this.image = new Image();
     	this.image.src = color;
   		}
+  		if (type == "text") {
+  		
+  		}
   		
     this.width = width;
     this.height = height;
@@ -60,7 +71,15 @@ function component(width, height, color, x, y,type) {
     this.y = y;
         
     this.update = function(){
-        ctx = myGameArea.context;
+    ctx = myGameArea.context;
+    
+    if (this.type == "text") {
+      ctx.font = this.width + " " + this.height;
+      ctx.fillStyle = color;
+      ctx.fillText(this.text, this.x, this.y);
+    } else {
+    	
+    	}
         if (type == "image") {
       		ctx.drawImage(this.image, 
         		this.x, 
@@ -102,17 +121,18 @@ function component(width, height, color, x, y,type) {
 }  
 function updateGameArea() {
 	//koniec gry kiedy cel trafi w działo
-	   
+	
 	  for (i = 0; i < myObstacles.length; i++) {
         
         if (myCannon.crashWith(myObstacles[i])) {
             
             myGameArea.stop();
+					            
             return;
         } 
     	}
-    //gdy strzał celny usuń trafiony cel
-     
+    //gdy strzał celny usuń trafiony cel oraz nalicz punktacje
+    
      for (i = 0; i<myObstacles.length; i++) {
      
      		for (j=0;j<myBullet.length;j++) {
@@ -120,7 +140,10 @@ function updateGameArea() {
      			if (myBullet[j].crashWith(myObstacles[i])) {
      				
      				myObstacles.splice(i,1);
-					myBullet.splice(j,1);     				
+					myBullet.splice(j,1);
+					myPts += 1;
+					myScore.text = "Score: " + myPts;
+								
      			}
      		}	
      	
@@ -131,6 +154,7 @@ function updateGameArea() {
 		myGameArea.clear();
 		myCannon.speedX=0;
 		myGameArea.frameNo += 1;
+		myScore.update();
 	
 		//ruch działem (prawo, lewo)
 	
