@@ -5,6 +5,11 @@ canHeight : 270,
 animeInterval : 10,
 cannonWidth : 30,
 cannonHeight :30,
+obstacleInterval: 100,
+obstacleWidth: 20,
+obstacleHeight: 20,
+obstacleSpeed: 1,
+bulletSize: 10,
 }
 
 var mySquare;
@@ -101,11 +106,12 @@ function component(width, height, color, x, y,type) {
     };
     
     this.newPos = function() {
-		  if (this.x < myGameArea.canvas.width-30 && this.x>0 ) {        
+    	//mozliwosc ruchu zawęzona o rozmiary działa
+		  if (this.x < myGameArea.canvas.width-myConfig.cannonWidth && this.x>0 ) {        
         this.x += this.speedX;
         }
         if (this.x==0) {this.x=1}
-        if (this.x==myGameArea.canvas.width-30) {this.x=myGameArea.canvas.width-30-1}
+        if (this.x==myGameArea.canvas.width-myConfig.cannonWidth) {this.x=myGameArea.canvas.width-myConfig.cannonWidth-1}
         this.y += this.speedY; 
     };
     this.crashWith = function(otherobj) {
@@ -176,15 +182,18 @@ function updateGameArea() {
 		// cele do odstrzelenie ;)
 		var x;   
 
-   	if (myGameArea.frameNo == 1 || everyinterval(150)) {
+   	if (myGameArea.frameNo == 1 || everyinterval(myConfig.obstacleInterval)) {
    
-			x = Math.floor(Math.random()*myGameArea.canvas.width - 20);
-			myObstacles.push(new component(20,20,"blue",x,0));   
+			x = Math.floor(Math.random()*myGameArea.canvas.width - myConfig.obstacleWidth);
+						
+			if (x<0) x=0;//żeby nie wyłaziły za plansze ;>
+			
+			myObstacles.push(new component(myConfig.obstacleWidth,myConfig.obstacleHeight,"blue",x,0));   
   		 }
 	
 		for (i=0;i<myObstacles.length;i++) {
 		
-			myObstacles[i].y +=1;
+			myObstacles[i].y += myConfig.obstacleSpeed;
 			myObstacles[i].update();
 		}
 	   
@@ -203,7 +212,7 @@ function updateGameArea() {
 		
 		if (myGameArea.keys && myGameArea.keys[32] && nextBullet) {
 		
-				myBullet.push (new component(10,10,"red",myCannon.x+10,myCannon.y-10));
+				myBullet.push (new component(myConfig.bulletSize,myConfig.bulletSize,"red",myCannon.x+myConfig.bulletSize,myCannon.y-myConfig.bulletSize));
 		}
 }
 
