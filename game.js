@@ -19,6 +19,10 @@ var myObstacles = [];
 var myScore;
 var myPts =0;
 
+function welcomeScreen() {
+	myGameArea.start();
+
+}
 
 function startGame() {
     
@@ -221,4 +225,5 @@ function everyinterval(n) {
     return false;
 }
 
-document.body.onload = startGame();
+document.body.onload = welcomeScreen();
+
