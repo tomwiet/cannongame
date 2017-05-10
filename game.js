@@ -1,3 +1,12 @@
+
+var myConfig = {
+canWidth : 480,
+canHeight : 270, 
+animeInterval : 10,
+cannonWidth : 30,
+cannonHeight :30,
+}
+
 var mySquare;
 var myCannon;
 var myBullet = [];
@@ -11,7 +20,7 @@ function startGame() {
     myGameArea.start();
     myScore = new component("20px", "Consolas", "black", 10, 30, "text");
     myScore.text = "Score: 0"; 
-    myCannon = new component(30,30,"cannon1.png",(myGameArea.canvas.width/2)-15,myGameArea.canvas.height-30,"image");
+    myCannon = new component( myConfig.cannonWidth,myConfig.cannonHeight,"pic/cannon1.png",(myGameArea.canvas.width/2)-(myConfig.cannonWidth/2),myGameArea.canvas.height-myConfig.cannonHeight,"image");
 
 }
 var myGameArea = {
@@ -20,12 +29,12 @@ var myGameArea = {
     
     start : function() {
     	
-        this.canvas.width = 480;
-        this.canvas.height = 270;
+        this.canvas.width = myConfig.canWidth
+        this.canvas.height = myConfig.canHeight;
         this.context = this.canvas.getContext("2d");
         document.body.insertBefore(this.canvas, document.body.childNodes[0]);
         this.frameNo = 0;
-        this.interval = setInterval(updateGameArea,10);
+        this.interval = setInterval(updateGameArea, myConfig.animeInterval);
         window.addEventListener('keydown', function (e) {
             myGameArea.keys = (myGameArea.keys || []);
             myGameArea.keys[e.keyCode] = true;
