@@ -1,4 +1,22 @@
+*{
+margin: 0;
+padding: 0;
+}
+
 canvas {
 background-color: grey;
 border: 1px solid black;
+margin-top: 50px;
+margin-left: auto;
+margin-right: auto;
+display: block;
+}
+#topbaner{
+position: fixed;
+top:0px;
+width: 100%;
+}
+h3 {
+padding: 3px;
+
 }

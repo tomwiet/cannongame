@@ -1,7 +1,7 @@
 
 var myConfig = {
-canWidth : 480,
-canHeight : 270, 
+canWidth : 800,
+canHeight : 400, 
 animeInterval : 10,
 cannonWidth : 30,
 cannonHeight :30,
